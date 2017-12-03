@@ -1,70 +1,6 @@
 clear; clc;
 format short
 
-% batch_size = 10;
-% num_var = 2;
-% max_deg = 10;
-% max_term = 2;
-% coeff_lb = -1e-2;
-% coeff_ub = 1e2;
-% var_lb = -1e3;
-% var_ub = 1e3;
-% tol_x = 1e-6;
-% options = optimset('TolX', 1e-6);
-% th_x = tol_x;
-% th_y = 1e-3;
-% tb1 = benchmark_mp(batch_size, num_var, max_deg, max_term, coeff_lb, coeff_ub, var_lb, var_ub, tol_x, options, th_x, th_y);
-% fprintf('\n');
-% disp(tb1);
-% 
-% batch_size = 10;
-% num_var = 3;
-% max_deg = 10;
-% max_term = 5;
-% coeff_lb = -1e4;
-% coeff_ub = 1e4;
-% var_lb = -1e4;
-% var_ub = 1e4;
-% tol_x = 1e-6;
-% options = optimset('TolX', 1e-6);
-% th_x = tol_x;
-% th_y = 1e-3;
-% tb2 = benchmark_mp(batch_size, num_var, max_deg, max_term, coeff_lb, coeff_ub, var_lb, var_ub, tol_x, options, th_x, th_y);
-% fprintf('\n');
-% disp(tb2);
-% 
-% batch_size = 10;
-% num_var = 5;
-% max_deg = 15;
-% max_term = 10;
-% coeff_lb = -1e6;
-% coeff_ub = 1e6;
-% var_lb = -1e3;
-% var_ub = 1e3;
-% tol_x = 1e-10;
-% options = optimset('TolX', tol_x);
-% th_x = tol_x;
-% th_y = 1e-3;
-% tb3 = benchmark_mp(batch_size, num_var, max_deg, max_term, coeff_lb, coeff_ub, var_lb, var_ub, tol_x, options, th_x, th_y);
-% fprintf('\n');
-% disp(tb3);
-
-batch_size = 10;
-num_var = 10;
-max_deg = 20;
-max_term = 10;
-coeff_lb = -1e6;
-coeff_ub = 1e6;
-var_lb = -1e2;
-var_ub = 1e2;
-tol_x = 1e-10;
-options = optimoptions(@fmincon, 'TolX', tol_x);
-th_x = tol_x;
-th_y = 1e-3;
-% tb4 = benchmark_mp(batch_size, num_var, max_deg, max_term, coeff_lb, coeff_ub, var_lb, var_ub, options, th_x, th_y);
-% fprintf('\n');
-% disp(tb4);
-
 %? different value of b2 affect x_opt????
 % f = @(x) 2*x(1)^3 + 2*x(3)*x(1)^2;
 % x0 = [-3.3255   -0.6171   -9.9421];
@@ -84,33 +20,98 @@ th_y = 1e-3;
 % x_opt2
 % fmincon(f, x0, ...) % pass explicit upper and lower bound
 
+%% benchmark univariate polynomial 
 batch_size = 1000;
+max_deg = 2;
+coeff_lb = -1e3;
+coeff_ub = 1e3;
+var_lb = -1e6;
+var_ub = 1e6;
+tol_x = 1e-6;
+options = optimset('TolX', tol_x);
+precision_x = tol_x;
+precision_y = 1e-6;
+% benchmark_up(batch_size, max_deg, coeff_lb, coeff_ub, var_lb, var_ub, options, precision_x, precision_y);
+
+max_deg = 3;
+var_lb = -1e5;
+var_ub = 1e5;
+tol_x = 1e-4;
+options = optimset('TolX', tol_x);
+precision_x = tol_x;
+% benchmark_up(batch_size, max_deg, coeff_lb, coeff_ub, var_lb, var_ub, options, precision_x, precision_y);
+
+max_deg = 5;
+var_lb = -1e3;
+var_ub = 1e3;
+% benchmark_up(batch_size, max_deg, coeff_lb, coeff_ub, var_lb, var_ub, options, precision_x, precision_y);
+
 max_deg = 10;
-coeff_lb = -1e6;
-coeff_ub = 1e6;
 var_lb = -1e2;
 var_ub = 1e2;
-tol_x = 1e-4;
-options = optimset(optimset('fminbnd'), 'TolX', tol_x);
-th_x = tol_x;
-benchmark_up(batch_size, max_deg, coeff_lb, coeff_ub, var_lb, var_ub, options, th_x);
+% benchmark_up(batch_size, max_deg, coeff_lb, coeff_ub, var_lb, var_ub, options, precision_x, precision_y);
 
-function tb = benchmark_mp(batch_size, num_var, max_deg, max_term, coeff_lb, coeff_ub, var_lb, var_ub, options, th_x, th_y)
-    fprintf('\n---------------\n');
+max_deg = 30;
+var_lb = -1;
+var_ub = 1;
+% benchmark_up(batch_size, max_deg, coeff_lb, coeff_ub, var_lb, var_ub, options, precision_x, precision_y);
+
+%% benchmark multivariate polynomial 
+batch_size = 10;
+num_var = 2;
+max_deg = 10;
+max_term = 2;
+coeff_lb = -1e2;
+coeff_ub = 1e2;
+var_lb = -1e3;
+var_ub = 1e3;
+tol_x = 1e-6;
+options = optimset('TolX', tol_x);
+precision_x = tol_x;
+precision_y = 1e-6;
+benchmark_mp(batch_size, num_var, max_deg, max_term, coeff_lb, coeff_ub, var_lb, var_ub, options, precision_x, precision_y);
+
+num_var = 5;
+max_deg = 15;
+max_term = 10;
+var_lb = -1e3;
+var_ub = 1e3;
+tol_x = 1e-10;
+options = optimset('TolX', tol_x);
+precision_x = tol_x;
+benchmark_mp(batch_size, num_var, max_deg, max_term, coeff_lb, coeff_ub, var_lb, var_ub, options, precision_x, precision_y);
+
+num_var = 10;
+max_deg = 20;
+max_term = 20;
+var_lb = -1e2;
+var_ub = 1e2;
+tol_x = 1e-10;
+options = optimset('TolX', tol_x);
+precision_x = tol_x;
+benchmark_mp(batch_size, num_var, max_deg, max_term, coeff_lb, coeff_ub, var_lb, var_ub, options, precision_x, precision_y);
+
+num_var = 30;
+max_deg = 60;
+max_term = 30;
+var_lb = -1;
+var_ub = 1;
+tol_x = 1e-10;
+options = optimset('TolX', tol_x);
+precision_x = tol_x;
+benchmark_mp(batch_size, num_var, max_deg, max_term, coeff_lb, coeff_ub, var_lb, var_ub, options, precision_x, precision_y);
+
+function tb = benchmark_mp(batch_size, num_var, max_deg, max_term, coeff_lb, coeff_ub, var_lb, var_ub, options, precision_x, precision_y)
+    fprintf('\nMultivariate Polynomial\n--------------------------------------------------------\n');
     disp(['batch size = ', num2str(batch_size)]);
     disp(['number of variables = ', num2str(num_var)]);
     disp(['max degree = ', num2str(max_deg)]);
     disp(['number of terms ', num2str(max_term)]);
-    disp(['interval of coefficient = [', num2str(coeff_lb), ', ', num2str(coeff_ub), ']']);
-    disp(['interval of variable = [', num2str(var_lb), ', ', num2str(var_ub), ']']);
+    disp(['range of coefficient = [', num2str(coeff_lb), ', ', num2str(coeff_ub), ']']);
+    disp(['range of x(i) = [', num2str(var_lb), ', ', num2str(var_ub), ']']);
     disp(['termination tolerance on x = ', num2str(options.TolX)]);
-    disp(['precision for comparing x = ', num2str(th_x)]);
-    disp(['precision for comparing f(x) = ', num2str(th_y * 100), '%']);
-
-    %%%%
-    syms a b c d e f g h l m n
-    var = [a b c d e f g h l m n];
-    %%%%
+    disp(['precision for comparing x = ', num2str(precision_x)]);
+    disp(['precision for comparing f(x) = ', num2str(precision_y * 100), '%']);
     
     nlp = 'nlp';
     root = 'root';
@@ -119,130 +120,100 @@ function tb = benchmark_mp(batch_size, num_var, max_deg, max_term, coeff_lb, coe
     time_gsccd_nlp = 0;
     time_gsccd_root = 0;
 
-    eq_gsccd_nlp = 0;
-    lose_gsccd_nlp = 0;
-    win_gsccd_nlp = 0;
+    con_eq_nlp = 0;
+    con_beat_nlp = 0;
+    con_lose_nlp = 0;
     
-    eq_gsccd_root = 0;
-    lose_gsccd_root = 0;
-    win_gsccd_root = 0;
+    con_eq_root = 0;
+    con_beat_root = 0;
+    con_lose_root = 0;
 
-    %%%%
-    iters_nlp = zeros(1,21);
-    iters_root = zeros(1,21);
-    %%%%
-    for i=1:batch_size
-        % generate a random multivariate polynomial
+    nlp_eq_root = 0;
+    nlp_beat_root = 0;
+    nlp_lose_root = 0;
+
+    for i = 1:batch_size
         p = rand_mp_prob(num_var, max_deg, max_term, coeff_ub, coeff_lb, var_lb, var_ub, options);
-        
-        %%%%
-        xs = rand(10, num_var);
-        ys = [];
-        for j = 1:length(xs)
-            ys(j) = p.objective(xs(j,:));
-        end
-        i
-%         fprintf('\n');
-%         p.mp.exps
-%         p.mp.coeffs
-%         p.box
-%         p.x0
-%         p.f(var(1:num_var))
-        %%%%
+        f = p.objective;
 
-        % solve and track computation time
-        t = clock;
         p.options.Solver = 'fmincon';
+        t = clock;
         [T,x_con] = evalc('double(mp_solve(p))');
         time_con = time_con + etime(clock, t);
         
-        t = clock;
         p.options.Solver = 'gsccd';
         p.options.UpSolver = 'nlp';
-        x_gsccd_nlp = double(mp_solve(p));
-%         [x_gsccd_nlp, iter_nlp] = mp_solve(p);
-%         x_gsccd_nlp = double(x_gsccd_nlp);
-%         iters_nlp(iter_nlp) = iters_nlp(iter_nlp) + 1;
-%         [T,x_gsccd_nlp] = evalc('double(mp_solve(p))');
-%         T
+        t = clock;
+        [T,x_gsccd_nlp] = evalc('double(mp_solve(p))');
         time_gsccd_nlp = time_gsccd_nlp + etime(clock, t);
         
-        t = clock;
         p.options.Solver = 'gsccd';
         p.options.UpSolver = 'root';
-        x_gsccd_root = double(mp_solve(p));
-%         [x_gsccd_root, iter_root] = mp_solve(p);
-%         x_gsccd_root = double(x_gsccd_root);
-%         iters_root(iter_root) = iters_root(iter_root) + 1;
-%         [T,x_gsccd_root] = evalc('double(mp_solve(p))');
-%         T
+        t = clock;
+        [T,x_gsccd_root] = evalc('double(mp_solve(p))');
         time_gsccd_root = time_gsccd_root + etime(clock, t);
 
         % compare objective value
-        y_con = double(p.objective(x_con));
-        y_gsccd_nlp = double(p.objective(x_gsccd_nlp));
-        y_gsccd_root = double(p.objective(x_gsccd_root));
+        y_con = double(f(x_con));
+        y_gsccd_nlp = double(f(x_gsccd_nlp));
+        y_gsccd_root = double(f(x_gsccd_root));
+
         
-        %%%%
-        x_con
-        x_gsccd_nlp
-        x_gsccd_root
-        y_con
-        y_gsccd_nlp
-        y_gsccd_root
-        %%%%
-        
-        if isEq(x_con, x_gsccd_nlp, th_x, y_con, y_gsccd_nlp, th_y)
-            eq_gsccd_nlp = eq_gsccd_nlp + 1;
-        elseif y_con < y_gsccd_nlp % gsccd lose
-            lose_gsccd_nlp = lose_gsccd_nlp + 1;
-        else % gsccd win
-            win_gsccd_nlp = win_gsccd_nlp + 1;
+        if isEq(x_con, x_gsccd_nlp, precision_x, y_con, y_gsccd_nlp, precision_y)
+            con_eq_nlp = con_eq_nlp + 1;
+        elseif y_con < y_gsccd_nlp
+            con_beat_nlp = con_beat_nlp + 1;
+        else
+            con_lose_nlp = con_lose_nlp + 1;
         end
 
-        if isEq(x_con, x_gsccd_root, th_x, y_con, y_gsccd_nlp, th_y)
-            eq_gsccd_root = eq_gsccd_root + 1;
+        if isEq(x_con, x_gsccd_root, precision_x, y_con, y_gsccd_root, precision_y)
+            con_eq_root = con_eq_root + 1;
         elseif y_con < y_gsccd_root
-            lose_gsccd_root = lose_gsccd_root + 1;
+            con_beat_root = con_beat_root + 1;
         else
-            win_gsccd_root = win_gsccd_root + 1;
+            con_lose_root = con_lose_root + 1;
         end
-        
-        %%%%%
-        for j = 1:length(xs)
-            if ys(j) ~= p.objective(xs(j,:))
-                fprintf('\n\n\n**************\n!!!!!!SOMETHING WRONG!!!\n\n\n');
-            end
+
+        if isEq(x_gsccd_nlp, x_gsccd_root, precision_x, y_gsccd_nlp, y_gsccd_root, precision_y)
+            nlp_eq_root = nlp_eq_root + 1;
+        elseif y_gsccd_nlp < y_gsccd_root
+            nlp_beat_root = nlp_beat_root + 1;
+        else
+            nlp_lose_root = nlp_lose_root + 1;
         end
-        %%%%
     end
 
-    time = [time_con; time_gsccd_nlp; time_gsccd_root];
-    eq = [1; eq_gsccd_nlp / batch_size; eq_gsccd_root / batch_size];
-    lose = [0; lose_gsccd_nlp / batch_size; lose_gsccd_root / batch_size];
-    win = [0; win_gsccd_nlp / batch_size; win_gsccd_root / batch_size];
-    tb = table(time, eq, lose, win, 'VariableNames', {'time', 'eq', 'lose', 'win'}, 'RowNames', {'fmincon', 'gsccd_nlp', 'gsccd_root'});
-%     iters_nlp
-%     iters_root
+    fprintf('\n');
+    disp(table([time_con], [time_gsccd_nlp], [time_gsccd_root], 'VariableNames', {'fmincon', 'gsccd_nlp', 'gsccd_root'}, 'RowNames', {'time'}));
+    fprintf('\n');
+    disp(table([con_beat_nlp/batch_size], [con_lose_nlp/batch_size], [con_eq_nlp/batch_size], 'VariableNames', {'fmincon', 'gsccd_nlp', 'equal'}, 'RowNames', {'% win'}));
+    fprintf('\n');
+    disp(table([con_beat_root/batch_size], [con_lose_root/batch_size], [con_eq_root/batch_size], 'VariableNames', {'fmincon', 'gsccd_root', 'equal'}, 'RowNames', {'% win'}));
+    fprintf('\n');
+    disp(table([nlp_beat_root/batch_size], [nlp_lose_root/batch_size], [nlp_eq_root/batch_size], 'VariableNames', {'gsccd_nlp', 'gsccd_root', 'equal'}, 'RowNames', {'% win'}));
+    fprintf('\n');
 end
 
-function tb = benchmark_up(batch_size, max_deg, coeff_lb, coeff_ub, var_lb, var_ub, options, th_x)
-    fprintf('\n---------------\n');
+function benchmark_up(batch_size, max_deg, coeff_lb, coeff_ub, var_lb, var_ub, options, precision_x, precision_y)
+    fprintf('\nUnivariate Polynomial\n--------------------------------------------------------\n');
     disp(['batch size = ', num2str(batch_size)]);
     disp(['max degree = ', num2str(max_deg)]);
-    disp(['interval of coefficient = [', num2str(coeff_lb), ', ', num2str(coeff_ub), ']']);
-    disp(['interval of variable = [', num2str(var_lb), ', ', num2str(var_ub), ']']);
+    disp(['range of coefficient = [', num2str(coeff_lb), ', ', num2str(coeff_ub), ']']);
+    disp(['range of x = [', num2str(var_lb), ', ', num2str(var_ub), ']']);
     disp(['termination tolerance on x = ', num2str(options.TolX)]);
+    disp(['precision for comparing x = ', num2str(precision_x)]);
+    disp(['precision for comparing f(x) = ', num2str(precision_y * 100), '%']);
     
     time_nlp = 0;
     time_root = 0;
-    eq_root = 0;
-    lose_root = 0;
-    win_root = 0;
-    
+    nlp_eq_root = 0;
+    nlp_beat_root = 0;
+    nlp_lose_root = 0;
     for i = 1:batch_size
         p = rand_up_prob(max_deg, coeff_lb, coeff_ub, var_lb, var_ub, options);
-        
+        f = p.objective;
+
         p.options.Solver = 'nlp';
         t = clock;
         x_nlp = up_solve(p);
@@ -253,32 +224,23 @@ function tb = benchmark_up(batch_size, max_deg, coeff_lb, coeff_ub, var_lb, var_
         x_root = up_solve(p);
         time_root = time_root + etime(clock, t);
        
-        y_nlp = p.objective(x_nlp);
-        y_root = p.objective(x_root);
+        y_nlp = double(f(x_nlp));
+        y_root = double(f(x_root));
 
-        if isEq(x_nlp, x_root, th_x, y_nlp, y_root, 0)
-            eq_root = eq_root + 1;
+        if isEq(x_nlp, x_root, precision_x, y_nlp, y_root, precision_y)
+            nlp_eq_root = nlp_eq_root + 1;
         elseif y_root < y_nlp
-            win_root = win_root + 1;
-            x_nlp
-            x_root
-            y_nlp
-            y_root
-            fprintf('\n');
+            nlp_lose_root = nlp_lose_root + 1;
         else
-            lose_root = lose_root + 1;
-            x_nlp
-            x_root
-            y_nlp
-            y_root
-            fprintf('\n');
+            nlp_beat_root = nlp_beat_root + 1;
         end
     end
-    win_root
-    eq_root
-    lose_root
-    time_nlp
-    time_root
+    
+    fprintf('\n');
+    disp(table([time_nlp], [time_root], 'VariableNames', {'fminbnd', 'root'}, 'RowNames', {'time'}));
+    fprintf('\n');
+    disp(table([nlp_beat_root/batch_size], [nlp_lose_root/batch_size], [nlp_eq_root/batch_size], 'VariableNames', {'fminbnd', 'root', 'equal'}, 'RowNames', {'% win'}));
+    fprintf('\n');
 end
 
 %% multivariate polynomial solver
@@ -308,30 +270,14 @@ function x = mp_solve_gsccd(p)
         p.options.UpSolver = 'nlp';
     end
 
+    syms variable
     f = p.objective;
-    box = p.box;
-    x0 = p.x0;
-    tol_x = p.options.TolX;
-    up_solver = p.options.UpSolver;
-    
-    variable = sym('variable');
-    num_var = length(x0);
-    x = x0;
+    num_var = length(p.x0);
+    x = p.x0;
     iter = 0;
     done = java.util.HashSet();
-    while (~exist('x_old', 'var') || norm(x - x_old) > tol_x) && iter < 10
+    while (~exist('x_old', 'var') || norm(x - x_old) > p.options.TolX) && iter < 10
         iter = iter + 1;
-        %%%%
-%         if exist('x_old', 'var') && iter > 10
-%             iter
-%             double(x_old)
-%             double(x)
-%             double(x-x_old)
-%             double(norm(x - x_old))
-%             double(f(x) - f(x_old))
-%             double(f(x))
-%         end
-        %%%%
         x_old = x;
         for i = 1:num_var
             if done.contains(i)
@@ -343,13 +289,10 @@ function x = mp_solve_gsccd(p)
                 x(i) = x_old(i);
                 continue
             end
-            a = box(i,1);
-            b = box(i,2);
             up_options = p.options;
-            up_options.Solver = up_solver;
-            up = struct('objective', up_f, 'x1', a, 'x2', b, 'options', up_options);
+            up_options.Solver = p.options.UpSolver;
+            up = struct('objective', up_f, 'x1', p.box(i,1), 'x2', p.box(i,2), 'options', up_options);
             x_opt = up_solve(up);
-%             x_opt = up_solve(up_f, a, b, tol_x, up_solver, options);
             x(i) = x_opt;
             if x(i) == x_old(i)
                 done.add(i);
@@ -373,50 +316,28 @@ function x = up_solve(p)
     end
 end
 
-% function x = up_solve(f, a, b, tol_x, solver, options)
-%     if ~exist('solver', 'var')
-%         solver = 'fminbnd'; % fminbnd
-%     end
-%     if strcmp(solver, 'nlp')
-%         x = up_solve_nlp(f, a, b, options);
-%     else
-%         x = up_solve_root(f, a, b, options);
-%     end
-% end
-
 %% univariate polynomial solver by non-linear programming solver
 % f: function handle of univariate polynomial
 function x = up_solve_nlp(p)
     f = p.objective;
-    a = p.x1;
-    b = p.x2;
     p.solver = 'fminbnd';
     local_minimizer = fminbnd(p);
-    [min_val, min_idx] = min([f(local_minimizer); f(a); f(b)]);
-    candidates = [local_minimizer a b];
+    [min_val, min_idx] = min([f(local_minimizer); f(p.x1); f(p.x2)]);
+    candidates = [local_minimizer p.x1 p.x2];
     x = candidates(min_idx);
 end
-
-% function x = up_solve_nlp(f, a, b, options)
-%     local_minimizer = fminbnd(f, a, b, options);
-%     [min_val, min_idx] = min([f(local_minimizer); f(a); f(b)]);
-%     candidates = [local_minimizer a b];
-%     x = candidates(min_idx);
-% end
 
 %% univariate polynomial solver by finding root of derivative
 % f: function handle of univariate polynomial
 function x = up_solve_root(p)
     f = p.objective;
-    a = p.x1;
-    b = p.x2;
     syms y
     sym_f = f(y);
     sym_df = diff(sym_f);
     all_roots = roots(sym2poly(sym_df));
     real_roots = all_roots(imag(all_roots) == 0)';
-    candidates = horzcat(real_roots, a, b);
-    candidates = candidates(and(candidates >= a, candidates <= b));
+    candidates = horzcat(real_roots, p.x1, p.x2);
+    candidates = candidates(and(candidates >= p.x1, candidates <= p.x2));
     min_idx = 1;
     min_val = f(candidates(1));
     for i = 2:length(candidates)
@@ -428,26 +349,6 @@ function x = up_solve_root(p)
     end
     x = candidates(min_idx);
 end
-
-% function x = up_solve_root(f, a, b, options)
-%     syms y
-%     sym_f = f(y);
-%     sym_df = diff(sym_f);
-%     all_roots = roots(sym2poly(sym_df));
-%     real_roots = all_roots(imag(all_roots) == 0)';
-%     candidates = horzcat(real_roots, a, b);
-%     candidates = candidates(and(candidates >= a, candidates <= b));
-%     min_idx = 1;
-%     min_val = f(candidates(1));
-%     for i = 2:length(candidates)
-%         val = f(candidates(i));
-%         if (val < min_val)
-%             min_val = val;
-%             min_idx = i;
-%         end
-%     end
-%     x = candidates(min_idx);
-% end
 
 %% generate a random multivariate polynomial minimization problem
 function prob = rand_mp_prob(num_var, max_deg, max_term, coeff_ub, coeff_lb, var_lb, var_ub, options)
@@ -561,11 +462,6 @@ function b = rand_permute(a)
 end
 
 %% compare result of different optimization methods
-function eq = isEq(x_base, x, th_x, y_base, y, th_y)
-    eq = or(norm(x_base - x) <= th_x, abs(y_base - y) <= abs(y_base * th_y));
-end
-
-%% time a function and suppress all output
-function t = time_fun(f)
-    [T t] = evalc('timeit(f)');
+function eq = isEq(x_base, x, precision_x, y_base, y, precision_y)
+    eq = or(norm(x_base - x) <= precision_x, abs(y_base - y) <= abs(y_base * precision_y));
 end
