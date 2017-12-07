@@ -1,50 +1,57 @@
+%% Naming of variables
+% ip: interior point
+% sqp: sequential quadratic programming
+% trr: trust region reflective
+% gsccd_nlp: Gauss-Seidel cyclic coordinate descent, with nonlinear programming solver fminbnd as uni-poly solver
+% gsccd_root: Gauss-Seidel cyclic coordinate descent, with critical point method as uni-poly solver
+% rgsccd: randomized GSCCD, with fminbnd as uni-poly solver
+% up: univariate polynomial
+% mp: multivariate polynomial
+
 clear; clc;
 format compact
 format short
 
 %% benchmark univariate polynomial 
-% batch_size = 100;
-% max_deg = 2;
-% coeff_lb = -1e3;
-% coeff_ub = 1e3;
-% var_lb = -1e6;
-% var_ub = 1e6;
-% tol_x = 1e-6;
-% options = optimset('TolX', tol_x);
-% precision_x = tol_x;
-% precision_y = 1e-6;
-% benchmark_up(batch_size, max_deg, coeff_lb, coeff_ub, var_lb, var_ub, options, precision_x, precision_y);
-% 
-% max_deg = 3;
-% var_lb = -1e5;
-% var_ub = 1e5;
-% tol_x = 1e-4;
-% options = optimset('TolX', tol_x);
-% precision_x = tol_x;
-% benchmark_up(batch_size, max_deg, coeff_lb, coeff_ub, var_lb, var_ub, options, precision_x, precision_y);
-% 
-% max_deg = 5;
-% var_lb = -1e3;
-% var_ub = 1e3;
-% benchmark_up(batch_size, max_deg, coeff_lb, coeff_ub, var_lb, var_ub, options, precision_x, precision_y);
-% 
-% max_deg = 10;
-% var_lb = -1e2;
-% var_ub = 1e2;
-% benchmark_up(batch_size, max_deg, coeff_lb, coeff_ub, var_lb, var_ub, options, precision_x, precision_y);
-% 
-% max_deg = 30;
-% var_lb = -1;
-% var_ub = 1;
-% benchmark_up(batch_size, max_deg, coeff_lb, coeff_ub, var_lb, var_ub, options, precision_x, precision_y);
-% 
-% max_deg = 50;
-% var_lb = -1;
-% var_ub = 1;
-% benchmark_up(batch_size, max_deg, coeff_lb, coeff_ub, var_lb, var_ub, options, precision_x, precision_y);
+batch_size = 1;
+max_deg = 2;
+coeff_lb = -1e3;
+coeff_ub = 1e3;
+var_lb = -1e6;
+var_ub = 1e6;
+tol_x = 1e-6;
+tol_y = 1e-4;
+options = optimset('TolX', tol_x);
+options.FunctionTolerance = tol_y;
+benchmark_up(batch_size, max_deg, coeff_lb, coeff_ub, var_lb, var_ub, options);
+
+max_deg = 3;
+var_lb = -1e5;
+var_ub = 1e5;
+benchmark_up(batch_size, max_deg, coeff_lb, coeff_ub, var_lb, var_ub, options);
+
+max_deg = 5;
+var_lb = -1e3;
+var_ub = 1e3;
+benchmark_up(batch_size, max_deg, coeff_lb, coeff_ub, var_lb, var_ub, options);
+
+max_deg = 10;
+var_lb = -1e2;
+var_ub = 1e2;
+benchmark_up(batch_size, max_deg, coeff_lb, coeff_ub, var_lb, var_ub, options);
+
+max_deg = 30;
+var_lb = -1;
+var_ub = 1;
+benchmark_up(batch_size, max_deg, coeff_lb, coeff_ub, var_lb, var_ub, options);
+
+max_deg = 50;
+var_lb = -1;
+var_ub = 1;
+benchmark_up(batch_size, max_deg, coeff_lb, coeff_ub, var_lb, var_ub, options);
 
 %% benchmark multivariate polynomial 
-batch_size = 5;
+batch_size = 1;
 num_var = 2;
 max_deg = 10;
 max_term = 2;
@@ -54,73 +61,34 @@ var_lb = -1e3;
 var_ub = 1e3;
 tol_x = 1e-6;
 tol_y = 1e-4;
-options = optimoptions('fmincon', 'TolX', tol_x);
-up_options = optimset(optimset('fminbnd'), 'TolX', tol_x);
-precision_x = tol_x;
-precision_y = 1e-6;
-benchmark_mp(batch_size, num_var, max_deg, max_term, coeff_lb, coeff_ub, var_lb, var_ub, options, up_options, precision_x, precision_y);
+options = optimoptions('fmincon', 'TolX', tol_x, 'FunctionTolerance', tol_y);
+up_options = optimset(optimset('fminbnd'));
+up_options.FunctionTolerance = tol_y;
+benchmark_mp(batch_size, num_var, max_deg, max_term, coeff_lb, coeff_ub, var_lb, var_ub, options, up_options);
 
 num_var = 5;
 max_deg = 15;
 max_term = 10;
 var_lb = -1e3;
 var_ub = 1e3;
-benchmark_mp(batch_size, num_var, max_deg, max_term, coeff_lb, coeff_ub, var_lb, var_ub, options, up_options, precision_x, precision_y);
+benchmark_mp(batch_size, num_var, max_deg, max_term, coeff_lb, coeff_ub, var_lb, var_ub, options, up_options);
 
 num_var = 10;
 max_deg = 20;
 max_term = 20;
 var_lb = -1e2;
 var_ub = 1e2;
-benchmark_mp(batch_size, num_var, max_deg, max_term, coeff_lb, coeff_ub, var_lb, var_ub, options, up_options, precision_x, precision_y);
+benchmark_mp(batch_size, num_var, max_deg, max_term, coeff_lb, coeff_ub, var_lb, var_ub, options, up_options);
 
-batch_size = 25;
 num_var = 30;
 max_deg = 60;
 max_term = 30;
 var_lb = -1;
 var_ub = 1;
-benchmark_mp(batch_size, num_var, max_deg, max_term, coeff_lb, coeff_ub, var_lb, var_ub, options, up_options, precision_x, precision_y);
+benchmark_mp(batch_size, num_var, max_deg, max_term, coeff_lb, coeff_ub, var_lb, var_ub, options, up_options);
 
-%% benchmark sos
-% batch_size = 1;
-% num_var = 2;
-% max_deg = 10;
-% max_term = 2;
-% coeff_lb = -1e2;
-% coeff_ub = 1e2;
-% var_lb = -inf;
-% var_ub = +inf;
-% tol_x = 1e-6;
-% options = optimoptions('fmincon', 'TolX', tol_x);
-% up_options = optimset(optimset('fminbnd'), 'TolX', tol_x);
-% precision_x = tol_x;
-% precision_y = 1e-6;
-% benchmark_mp(batch_size, num_var, max_deg, max_term, coeff_lb, coeff_ub, var_lb, var_ub, options, up_options, precision_x, precision_y);
-% 
-% num_var = 5;
-% max_deg = 15;
-% max_term = 10;
-% var_lb = -1e3;
-% var_ub = 1e3;
-% benchmark_mp(batch_size, num_var, max_deg, max_term, coeff_lb, coeff_ub, var_lb, var_ub, options, up_options, precision_x, precision_y);
-% 
-% num_var = 10;
-% max_deg = 20;
-% max_term = 20;
-% var_lb = -1e2;
-% var_ub = 1e2;
-% benchmark_mp(batch_size, num_var, max_deg, max_term, coeff_lb, coeff_ub, var_lb, var_ub, options, up_options, precision_x, precision_y);
-% 
-% batch_size = 25;
-% num_var = 30;
-% max_deg = 60;
-% max_term = 30;
-% var_lb = -1;
-% var_ub = 1;
-% benchmark_mp(batch_size, num_var, max_deg, max_term, coeff_lb, coeff_ub, var_lb, var_ub, options, up_options, precision_x, precision_y);
-
-function tb = benchmark_mp(batch_size, num_var, max_deg, max_term, coeff_lb, coeff_ub, var_lb, var_ub, options, up_options, precision_x, precision_y)
+function benchmark_mp(batch_size, num_var, max_deg, max_term, coeff_lb, coeff_ub, var_lb, var_ub, options, up_options)
+    % display batch info
     fprintf('\nMultivariate Polynomial\n--------------------------------------------------------\n');
     disp(['batch size = ', num2str(batch_size)]);
     disp(['number of variables = ', num2str(num_var)]);
@@ -129,23 +97,22 @@ function tb = benchmark_mp(batch_size, num_var, max_deg, max_term, coeff_lb, coe
     disp(['range of coefficient = [', num2str(coeff_lb), ', ', num2str(coeff_ub), ']']);
     disp(['range of x(i) = [', num2str(var_lb), ', ', num2str(var_ub), ']']);
     disp(['termination tolerance on x = ', num2str(options.TolX)]);
-    disp(['precision for comparing x = ', num2str(precision_x)]);
-    disp(['precision for comparing f(x) = ', num2str(precision_y * 100), '%']);
+    disp(['termination tolerance on y = ', num2str(options.FunctionTolerance * 100), '%']);
     
-    con = 'fmincon';
+    % create a list of symbolic variables
     for i = 1:num_var
         sym_vars(i) = sym(strcat('sv', num2str(i)));
     end
 
-    time_con = 0;
-    time_ip = 0;
-    time_sqp = 0;
-    time_as = 0;
-    time_trr = 0;
-    time_gsccd_nlp = 0;
-    time_gsccd_root = 0;
-    time_sos = 0;
+    % time each method
+    time_ip = 0;            
+    time_sqp = 0;           
+    time_trr = 0;           
+    time_gsccd_nlp = 0;     
+    time_gsccd_root = 0;    
+    time_rgsccd = 0;        
 
+    % compare objective value of different methods against gsccd_nlp
     ip_eq_nlp = 0;
     ip_beat_nlp = 0;
     ip_lose_nlp = 0;
@@ -162,121 +129,105 @@ function tb = benchmark_mp(batch_size, num_var, max_deg, max_term, coeff_lb, coe
     root_beat_nlp = 0;
     root_lose_nlp = 0;
 
-    sos_eq_nlp = 0;
-    sos_beat_nlp = 0;
-    sos_lose_nlp = 0;
-
+    rgsccd_eq_nlp = 0;
+    rgsccd_beat_nlp = 0;
+    rgsccd_lose_nlp = 0;
 
     for i = 1:batch_size
-        p = rand_mp_prob(num_var, max_deg, max_term, coeff_ub, coeff_lb, var_lb, var_ub, options);
-        f = p.objective;
-        f_symfun = f(sym_vars);
-        g_symfun = gradient(f_symfun, sym_vars);
-        h_symfun = hessian(f_symfun, sym_vars);
-        g = matlabFunction(g_symfun, 'Vars', {sym_vars});
-        h = matlabFunction(h_symfun, 'Vars', {sym_vars});
+        p = rand_mp_prob(num_var, max_deg, max_term, coeff_ub, coeff_lb, var_lb, var_ub, options); % generate randoem mul-poly problem instance
+        f = p.objective;        % function handle of objective 
+        f_symfun = f(sym_vars); % symbolic function of objective
+        g_symfun = gradient(f_symfun, sym_vars); % gradient of objective as symbolic function
+        h_symfun = hessian(f_symfun, sym_vars);  % hessian of objective as symbolic function
+        g = matlabFunction(g_symfun, 'Vars', {sym_vars}); % gradient as function handle
+        h = matlabFunction(h_symfun, 'Vars', {sym_vars}); % hessian as function handle
         
-        % t = clock;
-        % [x_con,y_con] = mp_solve(p, con);
-        % time_con = time_con + etime(clock, t);
-        
-        % p.options.Algorithm = 'interior-point';
-        % p.objective = include_g_h(f, g, h);
-        % p.options.SpecifyObjectiveGradient = true;
-        % p.options.HessianFcn = gen_hessianfcn(f, h);
-        % t = clock;
-        % [x_ip, y_ip] = mp_solve(p, con);
-        % time_ip = time_ip + etime(clock, t);
-        
-        % p.options.Algorithm = 'trust-region-reflective';
-        % t = clock;
-        % [x_trr, y_trr] = mp_solve(p, con);
-        % time_trr = time_trr + etime(clock, t);
-        % p.objective = f;
-        % p.options.SpecifyObjectiveGradient = false;
-        % p.options.HessianFcn = [];
-        
-        % p.options.Algorithm = 'sqp';
-        % t = clock;
-        % [x_sqp, y_sqp] = mp_solve(p, con);
-        % time_sqp = time_sqp + etime(clock, t);
-        
-        % p.options.Algorithm = 'active-set';
-        % t = clock;
-        % [x_as, y_as] = mp_solve(p, con);
-        % time_as = time_as + etime(clock, t);
-        
+        % include gradient and hessian
+        p.objective = include_g_h(f, g, h);
+        p.options.SpecifyObjectiveGradient = true;
+        p.options.HessianFcn = gen_hessianfcn(f, h);
+
+        p.options.Algorithm = 'interior-point';
         t = clock;
-        [~, y_sos] = mp_solve(p, 'sos');
-        time_sos = time_sos + etime(clock, t);
+        [x_ip, y_ip] = mp_solve(p, 'fmincon');
+        time_ip = time_ip + etime(clock, t);
+        
+        p.options.Algorithm = 'trust-region-reflective';
+        t = clock;
+        [x_trr, y_trr] = mp_solve(p, 'fmincon');
+        time_trr = time_trr + etime(clock, t);
+
+        % sqp and gsccd do not use gradient and hessian
+        p.objective = f;
+        p.options.SpecifyObjectiveGradient = false;
+        p.options.HessianFcn = [];
+        
+        p.options.Algorithm = 'sqp';
+        t = clock;
+        [x_sqp, y_sqp] = mp_solve(p, 'fmincon');
+        time_sqp = time_sqp + etime(clock, t);
         
         t = clock;
         [x_gsccd_nlp, y_gsccd_nlp] = mp_solve(p, 'gsccd', 'nlp', up_options);
         time_gsccd_nlp = time_gsccd_nlp + etime(clock, t);
-        
-        % t = clock;
-        % [x_gsccd_root, y_gsccd_root] = mp_solve(p, 'gsccd', 'root', []);
-        % time_gsccd_root = time_gsccd_root + etime(clock, t);
 
-        % xs = [x_ip; x_sqp; x_trr; x_gsccd_nlp; x_gsccd_root];
-        % for j = 1:size(xs,1)
-        %     for k = 1:num_var
-        %         assert((xs(j,k) - p.lb(k) >= -options.TolX && xs(j,k) - p.ub(k) <= options.TolX));
-        %     end
-        % end
+        t = clock;
+        [x_gsccd_root, y_gsccd_root] = mp_solve(p, 'gsccd', 'root', []);
+        time_gsccd_root = time_gsccd_root + etime(clock, t);
+        
+        t = clock;
+        [x_rgsccd, y_rgsccd] = mp_solve(p, 'rgsccd', 'nlp', []);
+        time_rgsccd = time_rgsccd + etime(clock, t);
+
+        % validate minimizers
+        xs = [x_ip; x_sqp; x_trr; x_gsccd_nlp; x_gsccd_root; x_rgsccd];
+        for j = 1:size(xs,1)
+            for k = 1:num_var
+                assert(xs(j,k) - p.lb(k) >= -options.TolX && xs(j,k) - p.ub(k) <= options.TolX);
+            end
+        end
         
         % compare objective value
-        % ip_eq_nlp = ip_eq_nlp + is_eq(x_ip, x_gsccd_nlp, precision_x, y_ip, y_gsccd_nlp, precision_y);
-        % ip_beat_nlp = ip_beat_nlp + is_better(x_ip, x_gsccd_nlp, precision_x, y_ip, y_gsccd_nlp, precision_y);
-        % ip_lose_nlp = ip_lose_nlp + is_worse(x_ip, x_gsccd_nlp, precision_x, y_ip, y_gsccd_nlp, precision_y);
+        ip_eq_nlp = ip_eq_nlp + is_eq(x_ip, x_gsccd_nlp, options.TolX, y_ip, y_gsccd_nlp, options.FunctionTolerance);
+        ip_beat_nlp = ip_beat_nlp + is_better(x_ip, x_gsccd_nlp, options.TolX, y_ip, y_gsccd_nlp, options.FunctionTolerance);
+        ip_lose_nlp = ip_lose_nlp + is_worse(x_ip, x_gsccd_nlp, options.TolX, y_ip, y_gsccd_nlp, options.FunctionTolerance);
 
-        % sqp_eq_nlp = sqp_eq_nlp + is_eq(x_sqp, x_gsccd_nlp, precision_x, y_sqp, y_gsccd_nlp, precision_y);
-        % sqp_beat_nlp = sqp_beat_nlp + is_better(x_sqp, x_gsccd_nlp, precision_x, y_sqp, y_gsccd_nlp, precision_y);
-        % sqp_lose_nlp = sqp_lose_nlp + is_worse(x_sqp, x_gsccd_nlp, precision_x, y_sqp, y_gsccd_nlp, precision_y);
+        sqp_eq_nlp = sqp_eq_nlp + is_eq(x_sqp, x_gsccd_nlp, options.TolX, y_sqp, y_gsccd_nlp, options.FunctionTolerance);
+        sqp_beat_nlp = sqp_beat_nlp + is_better(x_sqp, x_gsccd_nlp, options.TolX, y_sqp, y_gsccd_nlp, options.FunctionTolerance);
+        sqp_lose_nlp = sqp_lose_nlp + is_worse(x_sqp, x_gsccd_nlp, options.TolX, y_sqp, y_gsccd_nlp, options.FunctionTolerance);
 
-        % trr_eq_nlp = trr_eq_nlp + is_eq(x_trr, x_gsccd_nlp, precision_x, y_trr, y_gsccd_nlp, precision_y);
-        % trr_beat_nlp = trr_beat_nlp + is_better(x_trr, x_gsccd_nlp, precision_x, y_trr, y_gsccd_nlp, precision_y);
-        % trr_lose_nlp = trr_lose_nlp + is_worse(x_trr, x_gsccd_nlp, precision_x, y_trr, y_gsccd_nlp, precision_y);
+        trr_eq_nlp = trr_eq_nlp + is_eq(x_trr, x_gsccd_nlp, options.TolX, y_trr, y_gsccd_nlp, options.FunctionTolerance);
+        trr_beat_nlp = trr_beat_nlp + is_better(x_trr, x_gsccd_nlp, options.TolX, y_trr, y_gsccd_nlp, options.FunctionTolerance);
+        trr_lose_nlp = trr_lose_nlp + is_worse(x_trr, x_gsccd_nlp, options.TolX, y_trr, y_gsccd_nlp, options.FunctionTolerance);
 
-        % root_eq_nlp = root_eq_nlp + is_eq(x_gsccd_root, x_gsccd_nlp, precision_x, y_gsccd_root, y_gsccd_nlp, precision_y);
-        % root_beat_nlp = root_beat_nlp + is_better(x_gsccd_root, x_gsccd_nlp, precision_x, y_gsccd_root, y_gsccd_nlp, precision_y);
-        % root_lose_nlp = root_lose_nlp + is_worse(x_gsccd_root, x_gsccd_nlp, precision_x, y_gsccd_root, y_gsccd_nlp, precision_y);
-
-        if abs(y_sos - y_gsccd_nlp) <= 0.001 * abs(y_gsccd_nlp)
-            sos_eq_nlp = sos_eq_nlp + 1;
-        elseif y_sos < y_gsccd_nlp
-            sos_beat_nlp = sos_beat_nlp + 1;
-        else
-            y_sos
-            y_gsccd_nlp
-            sos_lose_nlp = sos_lose_nlp + 1;
-        end
+        root_eq_nlp = root_eq_nlp + is_eq(x_gsccd_root, x_gsccd_nlp, options.TolX, y_gsccd_root, y_gsccd_nlp, options.FunctionTolerance);
+        root_beat_nlp = root_beat_nlp + is_better(x_gsccd_root, x_gsccd_nlp, options.TolX, y_gsccd_root, y_gsccd_nlp, options.FunctionTolerance);
+        root_lose_nlp = root_lose_nlp + is_worse(x_gsccd_root, x_gsccd_nlp, options.TolX, y_gsccd_root, y_gsccd_nlp, options.FunctionTolerance);
+        
+        rgsccd_eq_nlp = rgsccd_eq_nlp + is_eq(x_rgsccd, x_gsccd_nlp, options.TolX, y_rgsccd, y_gsccd_nlp, options.FunctionTolerance);
+        rgsccd_beat_nlp = rgsccd_beat_nlp + is_better(x_rgsccd, x_gsccd_nlp, options.TolX, y_rgsccd, y_gsccd_nlp, options.FunctionTolerance);
+        rgsccd_lose_nlp = rgsccd_lose_nlp + is_worse(x_rgsccd, x_gsccd_nlp, options.TolX, y_rgsccd, y_gsccd_nlp, options.FunctionTolerance);
     end
 
-    % beat_nlp = [ip_beat_nlp; sqp_beat_nlp; trr_beat_nlp; root_beat_nlp] / batch_size;
-    % lose_nlp = [ip_lose_nlp; sqp_lose_nlp; trr_lose_nlp; root_lose_nlp] / batch_size;
-    % eq_nlp = [ip_eq_nlp; sqp_eq_nlp; trr_eq_nlp; root_eq_nlp] / batch_size;
-    % fprintf('\n');
-    % disp(table([time_ip], [time_sqp], [time_trr], [time_gsccd_nlp], [time_gsccd_root], 'VariableNames', {'ip', 'sqp' ,'trr', 'gsccd_nlp', 'gsccd_root'}, 'RowNames', {'time'}));
-    % fprintf('\n');
-    % disp(table(beat_nlp, lose_nlp, eq_nlp, 'VariableNames', {'beat_nlp', 'lose_nlp', 'eq_nlp'}, 'RowNames', {'ip', 'sqp', 'trr', 'gsscd_root'}));
-    % fprintf('\n');
-    time_gsccd_nlp
-    time_sos
-    sos_beat_nlp
-    sos_eq_nlp
-    sos_lose_nlp
+    % display result
+    beat_nlp = [ip_beat_nlp; sqp_beat_nlp; trr_beat_nlp; root_beat_nlp; rgsccd_beat_nlp] / batch_size;
+    lose_nlp = [ip_lose_nlp; sqp_lose_nlp; trr_lose_nlp; root_lose_nlp; rgsccd_lose_nlp] / batch_size;
+    eq_nlp = [ip_eq_nlp; sqp_eq_nlp; trr_eq_nlp; root_eq_nlp; rgsccd_eq_nlp] / batch_size;
+    fprintf('\n');
+    disp(table([time_ip], [time_sqp], [time_trr], [time_gsccd_nlp], [time_gsccd_root], [time_rgsccd], 'VariableNames', {'ip', 'sqp' ,'trr', 'gsccd_nlp', 'gsccd_root', 'rgsccd'}, 'RowNames', {'time'}));
+    fprintf('\n');
+    disp(table(beat_nlp, lose_nlp, eq_nlp, 'VariableNames', {'beat_nlp', 'lose_nlp', 'eq_nlp'}, 'RowNames', {'ip', 'sqp', 'trr', 'gsscd_root', 'rgsccd'}));
+    fprintf('\n');
 end
 
-function benchmark_up(batch_size, max_deg, coeff_lb, coeff_ub, var_lb, var_ub, options, precision_x, precision_y)
+function benchmark_up(batch_size, max_deg, coeff_lb, coeff_ub, var_lb, var_ub, options)
     fprintf('\nUnivariate Polynomial\n--------------------------------------------------------\n');
     disp(['batch size = ', num2str(batch_size)]);
     disp(['max degree = ', num2str(max_deg)]);
     disp(['range of coefficient = [', num2str(coeff_lb), ', ', num2str(coeff_ub), ']']);
     disp(['range of x = [', num2str(var_lb), ', ', num2str(var_ub), ']']);
     disp(['termination tolerance on x = ', num2str(options.TolX)]);
-    disp(['precision for comparing x = ', num2str(precision_x)]);
-    disp(['precision for comparing f(x) = ', num2str(precision_y * 100), '%']);
+    disp(['termination tolerance on y = ', num2str(options.FunctionTolerance * 100), '%']);
     
     time_nlp = 0;
     time_root = 0;
@@ -290,7 +241,6 @@ function benchmark_up(batch_size, max_deg, coeff_lb, coeff_ub, var_lb, var_ub, o
     sos_beat_nlp = 0;
     sos_lose_nlp = 0;
     
-    change = 0;
     for i = 1:batch_size
         p = rand_up_prob(max_deg, coeff_lb, coeff_ub, var_lb, var_ub, options);
         f = p.objective;
@@ -303,43 +253,27 @@ function benchmark_up(batch_size, max_deg, coeff_lb, coeff_ub, var_lb, var_ub, o
         [x_root, y_root] = up_solve(p, 'root');
         time_root = time_root + etime(clock, t);
         
-        t = clock;
-        [~, y_sos] = up_solve(p, 'sos');
-        time_sos = time_sos + etime(clock, t);
+        % t = clock;
+        % [~, y_sos] = up_solve(p, 'sos');
+        % time_sos = time_sos + etime(clock, t);
 
-        
         xs = [x_nlp; x_root];
         for j = 1:size(xs,1)
             assert((xs(j) >= p.x1 && xs(j) <= p.x2));
         end
         
-%         for i = 1:length(p.coeff)
-%             if rand() < 0.5
-%                 p.coeff(i) = p.coeff(i) * 1.001;
-%             else 
-%                 p.coeff(i) = p.coeff(i) * 0.999;
-%             end
-%         end
-%         p.sym_obj = poly2sym(p.coeff);
-%         p.objective = matlabFunction(p.sym_obj);
-%         [x_root2, y_root2] = up_solve(p, 'root');
-%         
-%         change = change + abs(y_root2 - y_root) / abs(y_root) * 100;
-        
-        if abs(y_sos - y_nlp) <= 0.001 * abs(y_nlp)
-            sos_eq_nlp = sos_eq_nlp + 1;
-        elseif y_sos < y_nlp
-            sos_beat_nlp = sos_beat_nlp + 1;
-        else
-            y_sos
-            y_nlp
-            p.x1
-            p.x2
-            x_nlp
-            sos_lose_nlp = sos_lose_nlp + 1;
-        end
+        nlp_eq_root = nlp_eq_root + is_eq(x_nlp, x_root, options.TolX, y_nlp, y_root, options.FunctionTolerance);
+        nlp_beat_root = nlp_beat_root + is_better(x_nlp, x_root, options.TolX, y_nlp, y_root, options.FunctionTolerance);
+        nlp_lose_root = nlp_lose_root + is_worse(x_nlp, x_root, options.TolX, y_nlp, y_root, options.FunctionTolerance);
+
+        % nlp_eq_sos = nlp_eq_sos + is_eq(0, 1, options.TolX, y_nlp, y_sos, options.FunctionTolerance);
+        % nlp_beat_sos = nlp_beat_sos + is_better(0, 1, options.TolX, y_nlp, y_sos, options.FunctionTolerance);
+        % nlp_lose_sos = nlp_lose_sos + is_worse(0, 1, options.TolX, y_nlp, y_sos, options.FunctionTolerance);
+ 
+        % root_eq_sos = root_eq_sos + is_eq(0, 1, options.TolX, y_root, y_sos, options.FunctionTolerance);
+        % root_beat_sos = root_beat_sos + is_better(0, 1, options.TolX, y_root, y_sos, options.FunctionTolerance);
+        % root_lose_sos = root_lose_sos + is_worse(0, 1, options.TolX, y_root, y_sos, options.FunctionTolerance);
     end
-%     change/batch_size
     
     fprintf('\n');
     disp(table([time_nlp], [time_root], [time_sos], 'VariableNames', {'fminbnd', 'root', 'sos'}, 'RowNames', {'time'}));
@@ -356,6 +290,8 @@ function [x y] = mp_solve(p, solver, up_solver, up_options)
         [x y] = mp_solve_fmincon(p);
     elseif strcmp(solver, 'gsccd')
         [x y] = mp_solve_gsccd(p, up_solver, up_options);
+    elseif strcmp(solver, 'rgsccd')
+        [x y] = mp_solve_rgsccd(p, up_solver, up_options);
     elseif strcmp(solver, 'sos')
         [x y] = mp_solve_sos(p);
     else
@@ -371,13 +307,98 @@ function [x y] = mp_solve_fmincon(p)
     [T x y] = evalc('fmincon(p)');
 end
 
+%% Randomized Gauss-Seidel cyclic coordinate descent methods
+function [x, y] = mp_solve_rgsccd(p, up_solver, up_options)
+    syms variable
+    f = p.objective; % function handle of objective
+    tol_y = p.options.FunctionTolerance; % termination tolerance on function value
+    num_var = length(p.x0);
+    x = p.x0; % initial point
+    x_old = x;
+    y_old = f(x_old);
+    iter = 0;
+    max_iter = 2.5 * num_var; % most problems finish within 2*num_var iterations
+    done = java.util.HashSet(); % record optimized variables
+    i_old = -1; % record variable picked for last iteration to avoid repetition
+    
+    while iter < max_iter && done.size() < num_var
+        % randomly pick a variable to optimize over
+        % skip variable picked in last iteration, skip variables that are done
+        candidates = [];
+        for i = 1:num_var
+            if ~done.contains(i) && i ~= i_old
+                candidates(length(candidates) + 1) = i;
+            end
+        end
+        if length(candidates) == 0
+            break;
+        end
+        i = candidates(randi(length(candidates)));
+        i_old = i;
+        
+        x = horzcat(x(1 : i-1), variable, x(i+1 : num_var)); % substitute the picked variable with symbolic variable
+        up_f = matlabFunction(f(x)); % create function handle of univariate polynomial
+        if nargin(up_f) == 0 % skip function taking no arg (e.g. @() 0.0) which means x(i) does not matter
+            x(i) = x_old(i);
+            done.add(i);
+            continue
+        end
+        up = struct('objective', up_f, 'x1', p.box(i,1), 'x2', p.box(i,2), 'options', up_options); % construct uni poly instance
+        [x(i) y] = up_solve(up, up_solver); % solve up
+        if abs(y - y_old) <= abs(tol_y * y_old) % x_i has been optimized
+            done.add(i);
+        end
+        x_old = x;
+        y_old = y;
+        iter = iter + 1;
+    end
+end
+
+%% Gauss-Seidel cyclic coordinate descent methods
+function [x y] = mp_solve_gsccd(p, up_solver, up_options)
+    syms variable
+    f = p.objective;
+    tol_y = p.options.FunctionTolerance;
+    num_var = length(p.x0);
+    x = p.x0;
+    x_old = x;
+    y_old = f(x_old);
+    iter = 0;
+    max_iter = 10; % most problems finish within 5 iterations
+    done = java.util.HashSet();
+    
+    while iter < max_iter && done.size() < num_var
+        iter = iter + 1;
+        for i = 1:num_var
+            if done.contains(i)
+                continue
+            end
+            x = horzcat(x(1 : i-1), variable, x(i+1 : num_var)); 
+            up_f = matlabFunction(f(x)); % create function handle of univariate polynomial
+            if nargin(up_f) == 0 % skip function taking no arg (e.g. @() 0.0) which means x(i) does not matter
+                x(i) = x_old(i);
+                continue
+            end
+            up = struct('objective', up_f, 'x1', p.box(i,1), 'x2', p.box(i,2), 'options', up_options);
+            [x(i) y] = up_solve(up, up_solver);
+            if abs(y - y_old) <= abs(tol_y * y_old)
+                done.add(i);
+            end
+            x_old = x;
+            y_old = y;
+        end
+    end
+end
+
+%% include hessian into objective function
 function f_hessian = gen_hessianfcn(f, h)
     function Hout = hessianfcn(x,lambda)
-        Hout = h(x'); % no ineq/eq constraint
+        Hout = h(x'); % no ineq/eq constraint in this project
     end
     f_hessian = @hessianfcn;
 end
 
+%% include gradient into objective function
 function f_gradient = include_g_h(f, g, h)
     function [fun, grad, H] = gradientfcn(x)
         fun = f(x);
@@ -391,84 +412,6 @@ function f_gradient = include_g_h(f, g, h)
     f_gradient = @gradientfcn;
 end
 
-%% Gauss-Seidel cyclic coordinate descent methods with randomization
-function [x, y] = mp_solve_gsccd_rand(p, up_solver, up_options)
-    syms variable
-    f = p.objective; % function handle of objective function
-    tol_y = p.options.FunctionTolerance; % termination tolerance on function value
-    num_var = length(p.x0);
-    x = p.x0; % initial point
-    iter = 0;
-    done = java.util.HashSet();
-    i_old = -1; % record variable picked for last iteration to avoid repetition
-    %?? how many iterations 
-    while iter < 50 && done.size() < num_var
-        iter = iter + 1;
-        x_old = x;
-
-        % randomly pick a variable to optimize over
-        % skip variable picked in last iteration, skip variables that are done
-        candidates = []
-        for i = 1:num_var
-            if ~done.contains(i) && i ~= i_old
-                candidates(length(candidates) + 1) = i
-            end
-        end
-        if length(candidates) == 0
-            continue;
-        end
-        i = candidates(randi(length(candidates)));
-        i_old = i;
-        
-        x = horzcat(x(1 : i-1), variable, x(i+1 : num_var)); % substitute the picked variable with symbolic variable
-        up_f = matlabFunction(f(x)); % create function handle of univariate polynomial
-        if nargin(up_f) == 0 % skip function taking no arg (e.g. @() 0.0) which means x(i) does not matter
-            x(i) = x_old(i);
-            done.add(i);
-            continue
-        end
-        up = struct('objective', up_f, 'x1', p.box(i,1), 'x2', p.box(i,2), 'options', up_options); % construct uni poly instance
-        [x_opt ~] = up_solve(up, up_solver);
-        x(i) = x_opt;
-        if abs(f(x) - f(x_old)) <= abs(tol_y * f(x_old))
-            done.add(i);
-        end
-    end
-    y = f(x);
-end
-
-%% Gauss-Seidel cyclic coordinate descent methods
-function [x y] = mp_solve_gsccd(p, up_solver, up_options)
-    syms variable
-    f = p.objective;
-    num_var = length(p.x0);
-    x = p.x0;
-    iter = 0;
-    done = java.util.HashSet();
-    while (~exist('x_old', 'var') || norm(x - x_old) > p.options.TolX) && iter < 10
-        iter = iter + 1;
-        x_old = x;
-        for i = 1:num_var
-            if done.contains(i)
-                continue
-            end
-            x = horzcat(x(1 : i-1), variable, x(i+1 : num_var)); 
-            up_f = matlabFunction(f(x)); % create function handle of univariate polynomial up_f = @(y) f(subs(x, variable, y));
-            if nargin(up_f) == 0 % skip function taking no arg (e.g. @() 0.0) which means x(i) does not matter
-                x(i) = x_old(i);
-                continue
-            end
-            up = struct('objective', up_f, 'x1', p.box(i,1), 'x2', p.box(i,2), 'options', up_options);
-            [x_opt y_opt] = up_solve(up, up_solver);
-            x(i) = x_opt;
-            if x(i) == x_old(i)
-                done.add(i);
-            end
-        end
-    end
-    y = f(x);
-end
-
 %% SOS
 function [x y] = mp_solve_sos(p)
     syms gam;
@@ -480,10 +423,10 @@ function [x y] = mp_solve_sos(p)
     prog = sosdecvar(prog,[gam]);
     f = p.sym_obj;
     prog = sosineq(prog,(f-gam));
-    % for i = 1:length(p.x0)
-    %     prog = sosineq(prog, sym_vars(i) - p.box(i,1));
-    %     prog = sosineq(prog, p.box(i,2) - sym_vars(i));
-    % end
+    for i = 1:length(p.x0)
+        prog = sosineq(prog, sym_vars(i) - p.box(i,1));
+        prog = sosineq(prog, p.box(i,2) - sym_vars(i));
+    end
     prog = sossetobj(prog,-gam);
     [T prog] = evalc('sossolve(prog)');
     x = -inf; % fake minimizer
@@ -503,8 +446,7 @@ function [x y] = up_solve(p, solver)
     end
 end
 
-%% univariate polynomial solver by non-linear programming solver
-% f: function handle of univariate polynomial
+%% univariate polynomial solver by non-linear programming solver fminbnd
 function [x y] = up_solve_nlp(p)
     f = p.objective;
     p.solver = 'fminbnd';
@@ -516,7 +458,6 @@ function [x y] = up_solve_nlp(p)
 end
 
 %% univariate polynomial solver by finding root of derivative
-% f: function handle of univariate polynomial
 function [x y] = up_solve_root(p)
     f = p.objective;
     syms y
@@ -554,7 +495,7 @@ function [xopt y] = up_solve_sos(p)
     y = sosgetsol(prog,gam, digit);
 end
 
-%% generate a random multivariate polynomial minimization problem
+%% generate a random multivariate polynomial minimization problem instance
 function prob = rand_mp_prob(num_var, max_deg, max_term, coeff_ub, coeff_lb, var_lb, var_ub, options)
     prob.mp = rand_mulpoly(num_var, max_deg, max_term, coeff_ub, coeff_lb);
     prob.objective = mulpoly2fun(prob.mp);
@@ -564,9 +505,6 @@ function prob = rand_mp_prob(num_var, max_deg, max_term, coeff_ub, coeff_lb, var
     prob.sym_obj = prob.objective(sym_vars);
     prob.box = rand_box(num_var, var_lb, var_ub);
     prob.x0 = rand_initpoint(num_var, prob.box);
-    % [A b] = box2constraint(prob.box);
-    % prob.Aineq = A;
-    % prob.bineq = b;
     if var_lb ~= -inf
         prob.lb = prob.box(:,1)';
     end
@@ -576,7 +514,7 @@ function prob = rand_mp_prob(num_var, max_deg, max_term, coeff_ub, coeff_lb, var
     prob.options = options;
 end
 
-%% generate a random univariate polynomial minimization problem
+%% generate a random univariate polynomial minimization problem instance
 function prob = rand_up_prob(max_deg, coeff_lb, coeff_ub, var_lb, var_ub, options)
     prob.coeff = rand(1, max_deg+1) * (coeff_ub - coeff_lb) + coeff_lb;
     prob.sym_obj = poly2sym(prob.coeff);
@@ -677,7 +615,7 @@ end
 
 %% compare result of different optimization methods
 function eq = is_eq(x, x_base, precision_x, y, y_base, precision_y)
-    eq = norm(x_base - x) <= precision_x || abs(y_base - y) <= abs(y_base * precision_y);
+    eq = norm(x - x_base) <= precision_x || abs(y - y_base) <= abs(y_base * precision_y);
 end
 
 function worse = is_worse(x, x_base, precision_x, y, y_base, precision_y)
